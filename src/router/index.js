@@ -1,25 +1,44 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createStore } from 'vuex'
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
+export default createStore({
+  state: {
+    user: {
+      id: '',
+      username: ''
+    },
+    isAuthenticated: false,
+    token: ''
   },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+  mutations: {
+    initializeStore(state) {
+      if (localStorage.getItem('token')) {
+        state.token = localStorage.getItem('token')
+        state.isAuthenticated = true
+        state.user.username = localStorage.getItem('username')
+        state.user.id = localStorage.getItem('userid')
+      } else {
+        state.user.id = ''
+        state.user.username = ''
+        state.token = ''
+        state.isAuthenticated = false
+      }
+    },
+    setToken(state, token) {
+      state.token = token
+      state.isAuthenticated = true
+    },
+    removeToken(state) {
+      state.user.id = ''
+      state.user.username = ''
+      state.token = ''
+      state.isAuthenticated = false
+    },
+    setUser(state, user) {
+      state.user = user
+    }
+  },
+  actions: {
+  },
+  modules: {
   }
-]
-
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
 })
-
-export default router
